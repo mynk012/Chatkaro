@@ -2,8 +2,11 @@ package com.mynkjain.chatkaro.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
     @Id
     public Integer id;
@@ -11,18 +14,27 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+    private String gender;
+    private List<Integer> followings = new ArrayList<>();
+    private List<Integer> followers = new ArrayList<>();
 
-    public User(){
+
+    public User() {
 
     }
-    public User(Integer id, String firstName, String lastName, String email, String password) {
-        super();
+
+    public User(Integer id, String firstName, String lastName, String email, String password, String gender,
+                List<Integer> followings, List<Integer> followers) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.gender = gender;
+        this.followings = followings;
+        this.followers = followers;
     }
+
 
     public String getFirstName() {
         return firstName;
@@ -64,6 +76,30 @@ public class User {
         this.password = password;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public List<Integer> getFollowings() {
+        return followings;
+    }
+
+    public void setFollowings(List<Integer> followings) {
+        this.followings = followings;
+    }
+
+    public List<Integer> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<Integer> followers) {
+        this.followers = followers;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -71,6 +107,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", gender='" + gender + '\'' +
                 '}';
     }
 }
