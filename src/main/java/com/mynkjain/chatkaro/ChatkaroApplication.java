@@ -10,4 +10,5 @@ public class ChatkaroApplication {
 		SpringApplication.run(ChatkaroApplication.class, args);
 	}
 
+
 }

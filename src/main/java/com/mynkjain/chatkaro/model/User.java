@@ -1,14 +1,17 @@
 package com.mynkjain.chatkaro.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Integer id;
     private String firstName;
     private String lastName;
@@ -18,6 +21,9 @@ public class User {
     private List<Integer> followings = new ArrayList<>();
     private List<Integer> followers = new ArrayList<>();
 
+    @JsonIgnore
+    @ManyToMany
+    private List<Post> savedPost = new ArrayList<>();
 
     public User() {
 
@@ -100,6 +106,14 @@ public class User {
         this.followers = followers;
     }
 
+    public List<Post> getSavedPost() {
+        return savedPost;
+    }
+
+    public void setSavedPost(List<Post> savedPost) {
+        this.savedPost = savedPost;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -111,3 +125,5 @@ public class User {
                 '}';
     }
 }
+
+
