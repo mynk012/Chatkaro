@@ -27,7 +27,7 @@ public class UserController {
         return savedUser;
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/api/getAll")
     public List<User> getUsers(){
 
         List<User> users = userRepository.findAll();
