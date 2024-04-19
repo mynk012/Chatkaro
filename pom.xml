@@ -45,6 +45,25 @@
 			<optional>true</optional>
 		</dependency>
 
+<!--		jjwt-api: The API module for JJWT, which provides the interfaces and classes necessary to work with JWTs.-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+		<!--		jjwt-impl: The implementation module for JJWT.-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+		<!--		jjwt-jackson: A module that integrates JJWT with the Jackson JSON processor to handle the JSON operations required by JWTs.-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
