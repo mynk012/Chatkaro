@@ -24,23 +24,15 @@ public class JwtValidator extends OncePerRequestFilter {
 
         String jwt = request.getHeader(JwtConstant.JWT_HEADER);
 
-        System.out.println("Inside JwtValidator...");
-        System.out.println("JWT header: " + jwt);
-        System.out.println("Expected JWT header: " + JwtConstant.JWT_HEADER);
-
-
         if(jwt != null){
-            System.out.println("Inside try block. JWT token: " + jwt);
             try{
                 String email = JwtProvider.getEmailFromJwtToken(jwt);
-                System.out.println("Extracted email from JWT token: " + email);
                 List<GrantedAuthority> authorities = new ArrayList<>();
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch(Exception e){
-                System.out.println("Inside catch block. Error: " + e);
                 throw new BadCredentialsException("invalid token....");
 
             }

@@ -31,9 +31,6 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createUser(@RequestBody User user) throws Exception {
         try{
-            System.out.println("Entering createUser method...");
-            System.out.println("Received user data: " + user);
-
             User isExist = userRepository.findByEmail(user.getEmail());
 
             if(isExist != null){
@@ -51,11 +48,9 @@ public class AuthController {
 
             String token = JwtProvider.generateToken(authentication);
 
-            System.out.println("token : " + token);
             AuthResponse res = new AuthResponse(token, "Register Success");
             return new ResponseEntity<>(res, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("Error occurred during user registration: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
