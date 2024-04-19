@@ -6,6 +6,8 @@ import com.mynkjain.chatkaro.repository.UserRepository;
 import com.mynkjain.chatkaro.response.AuthResponse;
 import com.mynkjain.chatkaro.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,29 +29,37 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @PostMapping("/signup")
-    public AuthResponse createUser(@RequestBody User user) throws Exception {
-        System.out.println("enter");
-        System.out.println(user);
-        User isExist = userRepository.findByEmail(user.getEmail());
+    public ResponseEntity<AuthResponse> createUser(@RequestBody User user) throws Exception {
+        try{
+            System.out.println("Entering createUser method...");
+            System.out.println("Received user data: " + user);
 
-        if(isExist != null){
-            throw new Exception("this email already used with another account");
+            User isExist = userRepository.findByEmail(user.getEmail());
+
+            if(isExist != null){
+                throw new Exception("this email already used with another account");
+            }
+            User newUser = new User();
+
+            newUser.setEmail(user.getEmail());
+            newUser.setFirstName(user.getFirstName());
+            newUser.setLastName(user.getLastName());
+            newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            User savedUser=userRepository.save(newUser);
+
+            Authentication authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());
+
+            String token = JwtProvider.generateToken(authentication);
+
+            System.out.println("token : " + token);
+            AuthResponse res = new AuthResponse(token, "Register Success");
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("Error occurred during user registration: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        User newUser = new User();
 
-        newUser.setEmail(user.getEmail());
-        newUser.setFirstName(user.getFirstName());
-        newUser.setLastName(user.getLastName());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        User savedUser=userRepository.save(newUser);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());
-
-        String token = JwtProvider.generateToken(authentication);
-
-        System.out.println("token : " + token);
-        AuthResponse res = new AuthResponse(token, "Register Success");
-        return res;
 
 
     }
