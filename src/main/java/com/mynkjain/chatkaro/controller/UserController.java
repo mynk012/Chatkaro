@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
@@ -19,15 +20,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
-    @PostMapping("/createUser")
-    public User createUser(@RequestBody User user){
 
-        User savedUser=userService.registerUser(user);
-
-        return savedUser;
-    }
-
-    @GetMapping("/api/getAll")
+    @GetMapping("/getAll")
     public List<User> getUsers(){
 
         List<User> users = userRepository.findAll();
@@ -35,14 +29,14 @@ public class UserController {
 
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("/{userId}")
     public User getUserById(@PathVariable("userId") Integer id) throws Exception{
         User user = userService.findUserById(id);
         return user;
 
     }
 
-    @PutMapping("/users")
+    @PutMapping("/update")
     public User updateUser(@RequestHeader("Authorization") String jwt, @RequestBody User user) throws Exception {
 
         User reqUser = userService.findUserByJwt(jwt);
@@ -50,7 +44,7 @@ public class UserController {
         return updatedUser;
     }
 
-    @PutMapping("/users/follow/{userId}")
+    @PutMapping("/follow/{userId}")
     public User followUserHandler(@RequestHeader("Authorization") String jwt, @PathVariable Integer userId) throws Exception {
 
         User reqUser = userService.findUserByJwt(jwt);
@@ -58,7 +52,7 @@ public class UserController {
         return user;
     }
 
-    @GetMapping("/users/search")
+    @GetMapping("/search")
     public List<User> searchUser(@RequestParam("query") String query){
 
         List<User> users=userService.searchUser(query);
@@ -66,7 +60,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/api/users/profile")
+    @GetMapping("/profile")
     public User getUserFromToken(@RequestHeader("Authorization") String jwt){
 
         User user = userService.findUserByJwt(jwt);

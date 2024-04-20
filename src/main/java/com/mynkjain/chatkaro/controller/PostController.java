@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/posts")
 public class PostController {
 
     @Autowired
@@ -22,7 +23,7 @@ public class PostController {
     private UserService userService;
 
 
-    @PostMapping("/api/posts")
+    @PostMapping
     public ResponseEntity<Post> createNewPost(@RequestHeader("Authorization") String jwt,@RequestBody Post post) throws Exception {
         User reqUser = userService.findUserByJwt(jwt);
         Post createdPost = postService.createNewPost(post, reqUser.getId());
@@ -30,26 +31,26 @@ public class PostController {
         return new ResponseEntity<>(createdPost, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/post/{postId}")
+    @GetMapping("{postId}")
     public ResponseEntity<Post> findPostByIdHandler(@PathVariable Integer postId) throws Exception {
         Post post=postService.findPostById(postId);
 
         return new ResponseEntity<>(post, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/posts/user/{userId}")
+    @GetMapping("user/{userId}")
     public ResponseEntity<List<Post>> findUserPost(@PathVariable Integer userId){
         List<Post> posts = postService.findPostByUserId(userId);
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
 
-    @GetMapping("/posts")
+    @GetMapping
     public ResponseEntity<List<Post>> findAllPost(){
         List<Post> posts = postService.findAllPost();
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
 
-    @PutMapping("/post/save/{postId}")
+    @PutMapping("/save/{postId}")
     public ResponseEntity<Post> savedPostHandler(@RequestHeader("Authorization") String jwt,@PathVariable Integer postId) throws Exception {
 
         User reqUser = userService.findUserByJwt(jwt);
