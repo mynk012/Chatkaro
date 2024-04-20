@@ -60,6 +60,7 @@ public class PostServiceImplementation implements PostService{
 
     @Override
     public List<Post> findPostByUserId(Integer userId) {
+
         return postRepository.findPostByUserId(userId);
     }
 

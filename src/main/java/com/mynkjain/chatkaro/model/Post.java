@@ -25,11 +25,14 @@ public class Post {
 
     private LocalDateTime createdAt;
 
+    @OneToMany
+    private List<Comments> comments = new ArrayList<>();
+
     public Post(){
 
     }
 
-    public Post(Integer id, String caption, String image, String video, User user, List<User> liked, LocalDateTime createdAt) {
+    public Post(Integer id, String caption, String image, String video, User user, List<User> liked, LocalDateTime createdAt, List<Comments> comments) {
         this.id = id;
         this.caption = caption;
         this.image = image;
@@ -37,6 +40,7 @@ public class Post {
         this.user = user;
         this.liked = liked;
         this.createdAt = createdAt;
+        this.comments = comments;
     }
 
     public Integer getId() {
@@ -92,6 +96,14 @@ public class Post {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<Comments> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comments> comments) {
+        this.comments = comments;
     }
 
     @Override

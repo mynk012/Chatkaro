@@ -20,8 +20,4 @@ public interface UserService {
 
     public User findUserByJwt(String jwt);
 
-
-
-
-
 }
