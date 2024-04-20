@@ -1,6 +1,7 @@
 package com.mynkjain.chatkaro.controller;
 
 import com.mynkjain.chatkaro.model.Post;
+import com.mynkjain.chatkaro.model.User;
 import com.mynkjain.chatkaro.response.ApiResponse;
 import com.mynkjain.chatkaro.service.PostService;
 import com.mynkjain.chatkaro.service.UserService;
@@ -21,10 +22,10 @@ public class PostController {
     private UserService userService;
 
 
-    @PostMapping("/posts/user/{userId}")
-    public ResponseEntity<Post> createNewPost(@RequestBody Post post,@PathVariable Integer userId) throws Exception {
-
-        Post createdPost = postService.createNewPost(post, userId);
+    @PostMapping("/api/posts")
+    public ResponseEntity<Post> createNewPost(@RequestHeader("Authorization") String jwt,@RequestBody Post post) throws Exception {
+        User reqUser = userService.findUserByJwt(jwt);
+        Post createdPost = postService.createNewPost(post, reqUser.getId());
 
         return new ResponseEntity<>(createdPost, HttpStatus.ACCEPTED);
     }
@@ -48,26 +49,31 @@ public class PostController {
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
 
-    @PutMapping("/post/save/{postId}/user/{userId}")
-    public ResponseEntity<Post> savedPostHandler(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
+    @PutMapping("/post/save/{postId}")
+    public ResponseEntity<Post> savedPostHandler(@RequestHeader("Authorization") String jwt,@PathVariable Integer postId) throws Exception {
 
-        Post post=postService.savedPost(postId, userId);
-
+        User reqUser = userService.findUserByJwt(jwt);
+        Post post=postService.savedPost(postId, reqUser.getId());
         return new ResponseEntity<>(post, HttpStatus.ACCEPTED);
 
     }
 
-    @PutMapping("/likePost/{postId}/user/{userId}")
-    public ResponseEntity<Post> likePostHandler(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
+    @PutMapping("/likePost/{postId}")
+    public ResponseEntity<Post> likePostHandler(@RequestHeader("Authorization") String jwt,@PathVariable Integer postId) throws Exception {
 
-        Post post=postService.likePost(postId, userId);
+        User reqUser = userService.findUserByJwt(jwt);
+        Post post=postService.likePost(postId, reqUser.getId());
 
         return new ResponseEntity<>(post, HttpStatus.ACCEPTED);
 
     }
-    @DeleteMapping("/delete/{postId}/user/{userId}")
-    public ResponseEntity<ApiResponse> deletePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
-        String message=postService.deletePost(postId, userId);
+    @DeleteMapping("/delete/{postId}")
+    public ResponseEntity<ApiResponse> deletePost(
+            @RequestHeader("Authorization") String jwt,@PathVariable Integer postId)
+            throws Exception {
+
+        User reqUser = userService.findUserByJwt(jwt);
+        String message=postService.deletePost(postId, reqUser.getId());
 
         ApiResponse res = new ApiResponse(message,true);
         return new ResponseEntity<ApiResponse>(res,HttpStatus.OK);
