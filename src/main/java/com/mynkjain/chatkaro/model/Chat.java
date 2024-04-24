@@ -26,4 +26,7 @@ public class Chat {
 
     private LocalDateTime timestamp;
 
+    @OneToMany(mappedBy = "chat")                   // we are mapping it to that it does not create a new table with name message_chat
+    private List<Message> messages = new ArrayList<>();
+
 }
