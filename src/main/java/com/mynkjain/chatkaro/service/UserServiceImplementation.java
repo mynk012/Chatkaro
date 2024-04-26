@@ -1,6 +1,7 @@
 package com.mynkjain.chatkaro.service;
 
 import com.mynkjain.chatkaro.config.JwtProvider;
+import com.mynkjain.chatkaro.exceptions.UserException;
 import com.mynkjain.chatkaro.model.User;
 import com.mynkjain.chatkaro.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +32,14 @@ public class UserServiceImplementation implements UserService{
     }
 
     @Override
-    public User findUserById(Integer userId) throws Exception {
+    public User findUserById(Integer userId) throws UserException {
 
         Optional<User> user = userRepository.findById(userId);
 
         if(user.isPresent()){
             return user.get();
         }
-
-        throw new Exception("user not exist with userid" + userId);
+        throw new UserException("user not exist with userid" + userId);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class UserServiceImplementation implements UserService{
     }
 
     @Override
-    public User followUser(Integer reqUserId, Integer userId) throws Exception {
+    public User followUser(Integer reqUserId, Integer userId) throws UserException {
 
         User reqUser = findUserById(reqUserId);
         User user = findUserById(userId);
@@ -63,11 +63,11 @@ public class UserServiceImplementation implements UserService{
         return reqUser;
     }
 
-    public User updateUser(User user, Integer userId) throws Exception {
+    public User updateUser(User user, Integer userId) throws UserException {
         Optional<User> user1 = userRepository.findById(userId);
 
         if(user1.isEmpty()){
-            throw new Exception("user not exit with id" + userId);
+            throw new UserException("user not exit with id" + userId);
         }
 
         User oldUser = user1.get();

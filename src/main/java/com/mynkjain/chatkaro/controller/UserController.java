@@ -1,5 +1,6 @@
 package com.mynkjain.chatkaro.controller;
 
+import com.mynkjain.chatkaro.exceptions.UserException;
 import com.mynkjain.chatkaro.model.User;
 import com.mynkjain.chatkaro.repository.UserRepository;
 import com.mynkjain.chatkaro.service.UserService;
@@ -30,14 +31,14 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable("userId") Integer id) throws Exception{
+    public User getUserById(@PathVariable("userId") Integer id) throws UserException{
         User user = userService.findUserById(id);
         return user;
 
     }
 
     @PutMapping("/update")
-    public User updateUser(@RequestHeader("Authorization") String jwt, @RequestBody User user) throws Exception {
+    public User updateUser(@RequestHeader("Authorization") String jwt, @RequestBody User user) throws UserException {
 
         User reqUser = userService.findUserByJwt(jwt);
         User updatedUser = userService.updateUser(user, reqUser.getId());
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/follow/{userId}")
-    public User followUserHandler(@RequestHeader("Authorization") String jwt, @PathVariable Integer userId) throws Exception {
+    public User followUserHandler(@RequestHeader("Authorization") String jwt, @PathVariable Integer userId) throws UserException {
 
         User reqUser = userService.findUserByJwt(jwt);
         User user = userService.followUser(reqUser.getId(), userId);

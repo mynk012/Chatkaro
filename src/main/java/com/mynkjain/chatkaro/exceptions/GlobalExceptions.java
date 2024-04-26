@@ -11,6 +11,14 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class GlobalExceptions {
 
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<ErrorDetails> userExceptionHandler(Exception e, WebRequest req){
+
+        ErrorDetails error = new ErrorDetails(e.getMessage(), req.getDescription(false), LocalDateTime.now());
+
+        return new ResponseEntity<ErrorDetails>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> otherExceptionHandler(Exception e, WebRequest req){
 
