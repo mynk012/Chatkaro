@@ -1,6 +1,7 @@
 package com.mynkjain.chatkaro.config;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +11,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -30,9 +38,33 @@ public class AppConfig {
                         .requestMatchers("/api/**").authenticated()  //requests matching the pattern "/api/**" should be authenticated,
                         .anyRequest().permitAll()) //  It specifies that any other request (not matching "/api/**") should be permitted to all users
                 .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
-                .csrf(csrf -> csrf.disable());  //disables CSRF (Cross-Site Request Forgery) protection
+                .csrf(csrf -> csrf.disable())  //disables CSRF (Cross-Site Request Forgery) protection
+                .cors(cors->cors.configurationSource(corsConfigurationSourcer()));
+
 
         return http.build(); // This line builds and returns the configured HttpSecurity object, which represents the security configuration for HTTP requests.
+    }
+
+    private CorsConfigurationSource corsConfigurationSourcer() {
+
+        return new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+                CorsConfiguration cfg = new CorsConfiguration();
+                cfg.setAllowedOrigins(Arrays.asList(
+                        "http://localhost:3000/",
+                        "http://localhost:3001/"
+                ));
+                cfg.setAllowedMethods(Collections.singletonList("*"));
+                cfg.setAllowCredentials(true);
+                cfg.setAllowedHeaders(Collections.singletonList("*"));
+                cfg.setExposedHeaders(Arrays.asList(
+                        "Authorization"));
+                cfg.setMaxAge(3600L);
+                return cfg;
+            }
+        };
     }
 
     @Bean
